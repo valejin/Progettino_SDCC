@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+option go_package = "/proto;mapReduce";
+
+service Master {
+  rpc DistributeData (Empty) returns (Ack);
+  rpc NotifyMapperCompletion (MapperStatus) returns (Ack);
+  rpc NotifyReducerCompletion(ReducerStatus) returns (Ack);
+}
+
+service Mapper {
+  rpc ProcessChunk (DataChunk) returns (Ack);
+  rpc SendRanges(RangeList) returns (Ack); // Nuovo metodo per inviare i range ai mapper
+}
+
+service Reducer {
+  rpc ReceiveChunk (MappedData) returns (Ack);
+  rpc StartReduction (Empty) returns (Ack);
+}
+
+message Range {
+  int32 start = 1;
+  int32 end = 2;
+}
+
+message RangeList {
+  repeated Range ranges = 1;
+}
+
+message ReducerStatus {
+  string reducerId = 1;
+}
+
+message ReducedData {
+  repeated int32 data = 1;
+}
+
+message Empty {}
+
+message Ack {
+  string message = 1;
+}
+
+message DataChunk {
+  repeated int32 data = 1;
+}
+
+message MappedData {
+  repeated int32 data = 1;
+  int32 reducer_id = 2;
+}
+
+message MapperStatus {
+  string mapper_id = 1;
+}
+
+message Result {
+  repeated int32 sorted_data = 1;
+}

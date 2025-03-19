@@ -1,0 +1,6 @@
+{
+  "master": "localhost:5000",
+  "mappers": ["localhost:5001", "localhost:5002"],
+  "reducers": ["localhost:5003", "localhost:5004"]
+}
+
